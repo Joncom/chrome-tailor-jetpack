@@ -24,6 +24,30 @@ var id = 0;
 var runtimeCallbacks = [];
 
 
+function request(options, callback) {
+  var requestID = id++;
+
+  if(typeof options !== 'object') {
+    throw 'An object must be passed an argument';
+  }
+
+  if(typeof callback !== 'function') {
+    callback = function() {};
+  }
+
+  self.port.on("request:response", function requestResponse(data) {
+    if(data.id === requestID) {
+      self.port.removeListener("request:response", requestResponse);
+      callback(cleanse(data.response));
+    }
+    return null;
+  });
+
+  options.id = requestID;
+  self.port.emit("request", options);
+}
+exportFunction(request, chrome, { defineAs: "request" });
+
 // START: chrome.tabs.*
 
 function tabsQuery(options, callback) {

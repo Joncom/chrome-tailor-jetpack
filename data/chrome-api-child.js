@@ -42,7 +42,11 @@ function setIcon(details, callback) {
   if(path[0] === '/') {
     path = path.substr(1)
   }
-  path = self.options.rootURI + path;
+  // Check for full URL like https://abc.com/icon.png
+  if(path.substr(0, 4).toUpperCase() !== 'HTTP') {
+    // Convert into resource:// path
+    path = self.options.rootURI + path;
+  }
 
   self.port.emit("chrome.browserAction.setIcon", path);
   typeof callback === 'function' && callback();

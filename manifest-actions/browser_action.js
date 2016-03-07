@@ -46,7 +46,7 @@ function create(options) {
           }, 500)
         });
 
-        setup({ target: panel });
+        setup({ target: panel, button: button });
 
         panel.show({
           position: button

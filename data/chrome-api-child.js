@@ -24,6 +24,32 @@ var id = 0;
 var runtimeCallbacks = [];
 
 
+function setIcon(details, callback) {
+  if(typeof details !== 'object') {
+    throw 'First argument "details" must be an object.';
+  }
+  if(typeof details.imageData !== 'undefined') {
+    throw '"imageData" is not implemented.';
+  }
+  if(typeof details.tabId !== 'undefined') {
+    throw '"tabId" is not implemented.';
+  }
+  if(typeof details.path === 'object') {
+    throw '"path" as object not implemented. Use string instead.';
+  }
+
+  var path = details.path;
+  if(path[0] === '/') {
+    path = path.substr(1)
+  }
+  path = self.options.rootURI + path;
+
+  self.port.emit("chrome.browserAction.setIcon", path);
+  typeof callback === 'function' && callback();
+}
+exportFunction(setIcon, browserAction, { defineAs: "setIcon" });
+
+
 function request(options, callback) {
   var requestID = id++;
 

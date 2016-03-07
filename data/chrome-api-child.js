@@ -354,7 +354,7 @@ self.port.on("runtime:send:message", function(data) {
     };
   }
   if (data.extensionId) {
-    MessageSender.id = extensionId;
+    MessageSender.id = data.extensionId;
   }
 
   runtimeCallbacks.forEach(cb => {

@@ -259,9 +259,66 @@ exportFunction(getCRXManifest, runtime, { defineAs: "getManifest" });
 
 function runtimeSendMessage(extensionId, message, options, responseCallback) {
   var queryID = id++;
-  if (typeof options == "function") {
+  var autoExtensionID = 'auto_generated_extension_id_not_implemented';
+  var autoResponseCallback = function() {};
+
+  if(
+    typeof extensionId === 'string' &&
+    typeof options === 'object' &&
+    typeof responseCallback === 'function'
+  ) {
+    // Nothing to do
+  }
+  // "extensionId" omitted
+  else if(
+    typeof options === 'function' &&
+    typeof message === 'object'
+  ) {
+    responseCallback = options;
+    options = message;
+    message = extensionId;
+    extensionId = autoExtensionID;
+  }
+  // "options" omitted
+  else if(
+    typeof options === 'function' &&
+    typeof extensionId === 'string'
+  ) {
     responseCallback = options;
     options = {};
+  }
+  // "responseCallback" omitted
+  else if(
+    typeof extensionId === 'string' &&
+    typeof options === 'object' &&
+    typeof responseCallback !== 'undefined'
+  ) {
+    responseCallback = autoResponseCallback;
+  }
+  // "extensionId" and "options" omitted
+  else if(typeof message === 'function') {
+    responseCallback = message;
+    options = {};
+    message = extensionId;
+    extensionId = autoExtensionID;
+  }
+  // "extensionId", "options", and "responseCallback" omitted
+  else if(
+    typeof message === 'undefined' &&
+    typeof options === 'undefined' &&
+    typeof responseCallback === 'undefined'
+  ) {
+    responseCallback = autoResponseCallback;
+    options = {};
+    message = extensionId;
+    extensionId = autoExtensionID;
+  }
+  // XXX: Impossible to know: "extensionId" and "responseCallback" omitted
+  // XXX: Impossible to know: "options" and "responseCallback" omitted
+  else {
+    var s = 'Impossible to determine which sendMessage arguments were omitted';
+    console.log(s);
+    throw s;
   }
 
   self.port.on("runtime:message:response:callback", function wait(data) {

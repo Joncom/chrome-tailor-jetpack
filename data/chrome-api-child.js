@@ -11,6 +11,9 @@ var extension = createObjectIn(chrome, { defineAs: "extension" });
 var history = createObjectIn(chrome, { defineAs: "history" });
 var topSites = createObjectIn(chrome, { defineAs: "topSites" });
 
+var proxy = createObjectIn(chrome, { defineAs: "proxy" });
+var proxySettings = createObjectIn(proxy, { defineAs: "settings" });
+
 var storage = createObjectIn(chrome, { defineAs: "storage" });
 var localStorage = createObjectIn(storage, { defineAs: "local" });
 
@@ -370,6 +373,53 @@ function runtimeOnMessage(callback) {
 exportFunction(runtimeOnMessage, onMessage, { defineAs: "addListener" });
 
 // END: chrome.runtime.*
+
+
+// START: chrome.proxy.*
+
+function proxySettingsSet(details, callback) {
+  // TODO: Implement more than just this strict use-case
+
+  // Official validation
+  if(typeof details !== 'object') {
+    throw '"details" argument must to be an object.';
+  } else if(typeof details.value !== 'object') {
+    throw '"details.value" must be an object.';
+  }
+
+  // Temporary specific use-case validation
+  if(details.value.mode !== 'pac_script') {
+    throw '"details.value.mode" must be string "pac_script".';
+  } else if(typeof details.value.pacScript !== 'object') {
+    throw '"details.value.pacScript" must be an object.';
+  } else if(typeof details.value.pacScript.data !== 'string') {
+    throw '"details.value.pacScript.data" must be a string.';
+  }
+
+  console.log('XXX: chrome.proxy.settings.set does not currently implement `details.value.pacScript.mandatory`.');
+  console.log('XXX: chrome.proxy.settings.set does not currently implement `details.scope`.');
+
+  var callID = id++;
+
+  self.port.on("chrome.proxy.settings.set::done", function wait(data) {
+    if (data.id == callID) {
+      self.port.removeListener("chrome.proxy.settings.set::done", wait);
+      typeof callback === 'function' && callback();
+    }
+    return null;
+  });
+
+  var pacScript = details.value.pacScript.data;
+  var autoconfig_url = "data:text/javascript," + encodeURIComponent(pacScript);
+
+  self.port.emit("chrome.proxy.settings.set", {
+    id: callID,
+    autoconfig_url: autoconfig_url
+  });
+}
+exportFunction(proxySettingsSet, proxySettings, { defineAs: "set" });
+
+// END: chrome.proxy.*
 
 
 // START: chrome.extension.*

@@ -29,6 +29,7 @@ var onAuthRequired = createObjectIn(webRequest, { defineAs: "onAuthRequired" });
 
 var id = 0;
 var runtimeCallbacks = [];
+var onAuthRequiredCallbacks = [];
 
 
 function setIcon(details, callback) {
@@ -259,6 +260,9 @@ self.port.on("tabs:send:message", function(data) {
 
 exportFunction(function(callback, filter, opt_extraInfoSpec) {
   console.log('chrome.webRequest.onAuthRequired.addListener was called...');
+  if(typeof callback === 'function') {
+    onAuthRequiredCallbacks.push(callback);
+  }
 }, onAuthRequired, { defineAs: "addListener" });
 
 exportFunction(function(callback) {

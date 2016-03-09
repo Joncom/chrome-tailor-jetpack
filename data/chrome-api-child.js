@@ -23,6 +23,9 @@ var onMessage = createObjectIn(runtime, { defineAs: "onMessage" });
 var browserAction = createObjectIn(chrome, { defineAs: "browserAction" });
 var onClicked = createObjectIn(browserAction, { defineAs: "onClicked" });
 
+var webRequest = createObjectIn(chrome, { defineAs: "webRequest" });
+var onAuthRequired = createObjectIn(webRequest, { defineAs: "onAuthRequired" });
+
 var id = 0;
 var runtimeCallbacks = [];
 
@@ -249,6 +252,27 @@ self.port.on("tabs:send:message", function(data) {
 
 
 // END: chrome.tabs.*
+
+
+// START: chrome.webRequest.*
+
+function onAuthRequired_addListener(callback, filter, opt_extraInfoSpec) {
+  console.log('chrome.webRequest.onAuthRequired.addListener was called...');
+}
+exportFunction(onAuthRequired_addListener, onAuthRequired, { defineAs: "addListener" });
+
+function onAuthRequired_hasListener(callback) {
+  console.log('chrome.webRequest.onAuthRequired.hasListener was called...');
+  callback(true);
+}
+exportFunction(onAuthRequired_hasListener, onAuthRequired, { defineAs: "hasListener" });
+
+function onAuthRequired_removeListener(callback) {
+  console.log('chrome.webRequest.onAuthRequired.removeListener was called...');
+}
+exportFunction(onAuthRequired_removeListener, onAuthRequired, { defineAs: "removeListener" });
+
+// END: chrome.webRequest.*
 
 
 // START: chrome.runtime.*

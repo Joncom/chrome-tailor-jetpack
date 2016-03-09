@@ -13,6 +13,7 @@ var topSites = createObjectIn(chrome, { defineAs: "topSites" });
 
 var proxy = createObjectIn(chrome, { defineAs: "proxy" });
 var proxySettings = createObjectIn(proxy, { defineAs: "settings" });
+var onProxyError = createObjectIn(proxy, { defineAs: "onProxyError" });
 
 var storage = createObjectIn(chrome, { defineAs: "storage" });
 var localStorage = createObjectIn(storage, { defineAs: "local" });
@@ -397,6 +398,19 @@ exportFunction(runtimeOnMessage, onMessage, { defineAs: "addListener" });
 
 
 // START: chrome.proxy.*
+
+exportFunction(function(callback, filter, opt_extraInfoSpec) {
+  console.log('chrome.proxy.onProxyError.addListener was called...');
+}, onProxyError, { defineAs: "addListener" });
+
+exportFunction(function(callback) {
+  console.log('chrome.proxy.onProxyError.hasListener was called...');
+  callback(true);
+}, onProxyError, { defineAs: "hasListener" });
+
+exportFunction(function(callback) {
+  console.log('chrome.proxy.onProxyError.removeListener was called...');
+}, onProxyError, { defineAs: "removeListener" });
 
 function proxySettingsGet(details, callback) {
   console.log("chrome.proxy.settings.get was called...");

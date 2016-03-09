@@ -263,7 +263,7 @@ exportFunction(function(callback, filter, opt_extraInfoSpec) {
 
 exportFunction(function(callback) {
   console.log('chrome.webRequest.onAuthRequired.hasListener was called...');
-  callback(true);
+  callback(false);
 }, onAuthRequired, { defineAs: "hasListener" });
 
 exportFunction(function(callback) {
@@ -405,7 +405,7 @@ exportFunction(function(callback, filter, opt_extraInfoSpec) {
 
 exportFunction(function(callback) {
   console.log('chrome.proxy.onProxyError.hasListener was called...');
-  callback(true);
+  callback(false);
 }, onProxyError, { defineAs: "hasListener" });
 
 exportFunction(function(callback) {

@@ -279,6 +279,13 @@ exportFunction(function(callback) {
 
 exportFunction(function(callback) {
   console.log('chrome.webRequest.onAuthRequired.removeListener was called...');
+  for(var i=0; i<onAuthRequiredCallbacks.length; i++) {
+    var cb = onAuthRequiredCallbacks[i];
+    if(cb === callback) {
+      onAuthRequiredCallbacks.splice(i, 1);
+      return;
+    }
+  }
 }, onAuthRequired, { defineAs: "removeListener" });
 
 // END: chrome.webRequest.*

@@ -377,6 +377,16 @@ exportFunction(runtimeOnMessage, onMessage, { defineAs: "addListener" });
 
 // START: chrome.proxy.*
 
+function proxySettingsGet(details, callback) {
+  console.log("chrome.proxy.settings.get was called...");
+  if(typeof callback === 'function') {
+    callback({
+      levelOfControl: 'controllable_by_this_extension'
+    });
+  }
+}
+exportFunction(proxySettingsGet, proxySettings, { defineAs: "get" });
+
 function proxySettingsSet(details, callback) {
   // TODO: Implement more than just this strict use-case
 

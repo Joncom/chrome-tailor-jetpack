@@ -389,6 +389,7 @@ function proxySettingsGet(details, callback) {
 exportFunction(proxySettingsGet, proxySettings, { defineAs: "get" });
 
 function proxySettingsSet(details, callback) {
+  console.log('chrome.proxy.settings.set was called...');
   // TODO: Implement more than just this strict use-case
 
   // Official validation

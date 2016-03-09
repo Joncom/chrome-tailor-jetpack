@@ -256,21 +256,18 @@ self.port.on("tabs:send:message", function(data) {
 
 // START: chrome.webRequest.*
 
-function onAuthRequired_addListener(callback, filter, opt_extraInfoSpec) {
+exportFunction(function(callback, filter, opt_extraInfoSpec) {
   console.log('chrome.webRequest.onAuthRequired.addListener was called...');
-}
-exportFunction(onAuthRequired_addListener, onAuthRequired, { defineAs: "addListener" });
+}, onAuthRequired, { defineAs: "addListener" });
 
-function onAuthRequired_hasListener(callback) {
+exportFunction(function(callback) {
   console.log('chrome.webRequest.onAuthRequired.hasListener was called...');
   callback(true);
-}
-exportFunction(onAuthRequired_hasListener, onAuthRequired, { defineAs: "hasListener" });
+}, onAuthRequired, { defineAs: "hasListener" });
 
-function onAuthRequired_removeListener(callback) {
+exportFunction(function(callback) {
   console.log('chrome.webRequest.onAuthRequired.removeListener was called...');
-}
-exportFunction(onAuthRequired_removeListener, onAuthRequired, { defineAs: "removeListener" });
+}, onAuthRequired, { defineAs: "removeListener" });
 
 // END: chrome.webRequest.*
 

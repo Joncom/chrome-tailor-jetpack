@@ -382,7 +382,7 @@ function proxySettingsSet(details, callback) {
 
   // Official validation
   if(typeof details !== 'object') {
-    throw '"details" argument must to be an object.';
+    throw '"details" argument must be an object.';
   } else if(typeof details.value !== 'object') {
     throw '"details.value" must be an object.';
   }

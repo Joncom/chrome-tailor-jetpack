@@ -270,11 +270,10 @@ exportFunction(function(callback) {
   for(var i=0; i<onAuthRequiredCallbacks.length; i++) {
     var cb = onAuthRequiredCallbacks[i];
     if(cb === callback) {
-      callback(true);
-      return;
+      return true;
     }
   }
-  callback(false);
+  return false;
 }, onAuthRequired, { defineAs: "hasListener" });
 
 exportFunction(function(callback) {
@@ -423,7 +422,7 @@ exportFunction(function(callback, filter, opt_extraInfoSpec) {
 
 exportFunction(function(callback) {
   console.log('chrome.proxy.onProxyError.hasListener was called...');
-  callback(false);
+  return false;
 }, onProxyError, { defineAs: "hasListener" });
 
 exportFunction(function(callback) {

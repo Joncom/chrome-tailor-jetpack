@@ -380,9 +380,10 @@ exportFunction(runtimeOnMessage, onMessage, { defineAs: "addListener" });
 function proxySettingsGet(details, callback) {
   console.log("chrome.proxy.settings.get was called...");
   if(typeof callback === 'function') {
-    callback({
+    var response = {
       levelOfControl: 'controllable_by_this_extension'
-    });
+    };
+    callback(cleanse(response));
   }
 }
 exportFunction(proxySettingsGet, proxySettings, { defineAs: "get" });

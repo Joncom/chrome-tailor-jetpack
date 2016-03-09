@@ -267,6 +267,13 @@ exportFunction(function(callback, filter, opt_extraInfoSpec) {
 
 exportFunction(function(callback) {
   console.log('chrome.webRequest.onAuthRequired.hasListener was called...');
+  for(var i=0; i<onAuthRequiredCallbacks.length; i++) {
+    var cb = onAuthRequiredCallbacks[i];
+    if(cb === callback) {
+      callback(true);
+      return;
+    }
+  }
   callback(false);
 }, onAuthRequired, { defineAs: "hasListener" });
 

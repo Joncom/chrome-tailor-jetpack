@@ -34,7 +34,7 @@ function create(options) {
           contentURL: url,
           contentScriptWhen: "start",
           contentScriptFile: [
-            self.data.url("panel-auto-resizer.js"),
+            self.data.url("autofit-popup.js"),
             self.data.url("chrome-api-child.js")
           ],
           contentScriptOptions: {

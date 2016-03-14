@@ -33,7 +33,10 @@ function create(options) {
         let panel = lastPanel = Panel({
           contentURL: url,
           contentScriptWhen: "start",
-          contentScriptFile: self.data.url("chrome-api-child.js"),
+          contentScriptFile: [
+            self.data.url("panel-auto-resizer.js"),
+            self.data.url("chrome-api-child.js")
+          ],
           contentScriptOptions: {
             rootURI: options.rootURI,
             manifest: manifest

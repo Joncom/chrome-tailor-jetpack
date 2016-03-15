@@ -486,8 +486,8 @@ exportFunction(proxySettingsSet, proxySettings, { defineAs: "set" });
 function proxySettingsClear(details, callback) {
   console.log("chrome.proxy.settings.clear was called...");
   var callID = id++;
-  self.port.on("chrome.proxy.settings.clear::done", function wait(data) {
-    if (data.id == callID) {
+  self.port.on("chrome.proxy.settings.clear::done", function wait(callbackCallID) {
+    if (callbackCallID == callID) {
       self.port.removeListener("chrome.proxy.settings.clear::done", wait);
       typeof callback === 'function' && callback();
     }

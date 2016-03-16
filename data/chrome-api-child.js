@@ -29,7 +29,6 @@ var onAuthRequired = createObjectIn(webRequest, { defineAs: "onAuthRequired" });
 
 var id = 0;
 var runtimeCallbacks = [];
-var onAuthRequiredCallbacks = [];
 
 
 exportFunction(function(host, port, realm, username, password) {
@@ -272,31 +271,15 @@ self.port.on("tabs:send:message", function(data) {
 
 exportFunction(function(callback, filter, opt_extraInfoSpec) {
   console.log('chrome.webRequest.onAuthRequired.addListener was called...');
-  if(typeof callback === 'function') {
-    onAuthRequiredCallbacks.push(callback);
-  }
 }, onAuthRequired, { defineAs: "addListener" });
 
 exportFunction(function(callback) {
   console.log('chrome.webRequest.onAuthRequired.hasListener was called...');
-  for(var i=0; i<onAuthRequiredCallbacks.length; i++) {
-    var cb = onAuthRequiredCallbacks[i];
-    if(cb === callback) {
-      return true;
-    }
-  }
   return false;
 }, onAuthRequired, { defineAs: "hasListener" });
 
 exportFunction(function(callback) {
   console.log('chrome.webRequest.onAuthRequired.removeListener was called...');
-  for(var i=0; i<onAuthRequiredCallbacks.length; i++) {
-    var cb = onAuthRequiredCallbacks[i];
-    if(cb === callback) {
-      onAuthRequiredCallbacks.splice(i, 1);
-      return;
-    }
-  }
 }, onAuthRequired, { defineAs: "removeListener" });
 
 // END: chrome.webRequest.*

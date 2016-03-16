@@ -20,6 +20,7 @@ var localStorage = createObjectIn(storage, { defineAs: "local" });
 
 var runtime = createObjectIn(chrome, { defineAs: "runtime" });
 var onMessage = createObjectIn(runtime, { defineAs: "onMessage" });
+var onInstalled = createObjectIn(runtime, { defineAs: "onInstalled" });
 
 var browserAction = createObjectIn(chrome, { defineAs: "browserAction" });
 var onClicked = createObjectIn(browserAction, { defineAs: "onClicked" });
@@ -29,6 +30,7 @@ var onAuthRequired = createObjectIn(webRequest, { defineAs: "onAuthRequired" });
 
 var id = 0;
 var runtimeCallbacks = [];
+var onInstalledCallbacks = [];
 
 
 exportFunction(function(host, port, realm, username, password) {
@@ -286,6 +288,22 @@ exportFunction(function(callback) {
 
 
 // START: chrome.runtime.*
+
+self.port.on("chrome.runtime.onInstalled", function() {
+  console.log("chrome.runtime.onInstalled event fired...");
+  onInstalledCallbacks.forEach(function(callback) {
+    callback();
+  });
+});
+
+// TODO: Implement "hasListener" and "removeListener"
+exportFunction(function(callback, filter, opt_extraInfoSpec) {
+  console.log('chrome.runtime.onInstalled.addListener was called...');
+  if(typeof callback !== 'function') {
+    throw 'The "callback" argument must be a function.';
+  }
+  onInstalledCallbacks.push(callback);
+}, onInstalled, { defineAs: "addListener" });
 
 exportFunction(extGetURL, runtime, { defineAs: "getURL" });
 

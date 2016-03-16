@@ -74,6 +74,9 @@ function load(options) {
       });
 
       // TODO: close all overriden pages
+    },
+    onInstalled: function() {
+      backgroundPage.port.emit('chrome.runtime.onInstalled');
     }
   }
 }

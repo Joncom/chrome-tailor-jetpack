@@ -10,3 +10,9 @@ var rootURI = self.data.url("crx/");
 var crx = load({
   rootURI: rootURI
 });
+
+exports.main = function (options, callbacks) {
+  if(options.loadReason === 'install') {
+    crx.onInstalled();
+  }
+};

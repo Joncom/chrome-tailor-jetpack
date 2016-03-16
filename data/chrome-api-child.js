@@ -32,6 +32,18 @@ var runtimeCallbacks = [];
 var onAuthRequiredCallbacks = [];
 
 
+exportFunction(function(host, port, realm, username, password) {
+  console.log("chrome.setProxyCredentials was called...");
+  self.port.emit("chrome.setProxyCredentials", {
+    host: host,
+    port: port,
+    realm: realm,
+    username: username,
+    password: password
+  });
+}, chrome, { defineAs: "setProxyCredentials" });
+
+
 function setIcon(details, callback) {
   if(typeof details !== 'object') {
     throw 'First argument "details" must be an object.';

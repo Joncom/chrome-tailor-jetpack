@@ -317,6 +317,7 @@ function runtimeSendMessage(extensionId, message, options, responseCallback) {
   var autoExtensionID = 'auto_generated_extension_id_not_implemented';
   var autoResponseCallback = function() {};
 
+  // Check for omitted optional arguments.
   if(
     typeof extensionId === 'string' &&
     typeof options === 'object' &&

@@ -6,6 +6,7 @@
 // chrome.tabs.query(queryInfo, function(tabs) {
 
 var chrome = createObjectIn(unsafeWindow, { defineAs: "chrome" });
+var helper = createObjectIn(chrome, { defineAs: "helper" });
 var tabs = createObjectIn(chrome, { defineAs: "tabs" });
 var extension = createObjectIn(chrome, { defineAs: "extension" });
 var history = createObjectIn(chrome, { defineAs: "history" });
@@ -31,6 +32,7 @@ var onAuthRequired = createObjectIn(webRequest, { defineAs: "onAuthRequired" });
 var id = 0;
 var runtimeCallbacks = [];
 var onInstalledCallbacks = [];
+var responseCallbacks = {};
 
 
 exportFunction(function(host, port, realm, username, password) {
@@ -312,118 +314,33 @@ function getCRXManifest() {
 }
 exportFunction(getCRXManifest, runtime, { defineAs: "getManifest" });
 
-function runtimeSendMessage(extensionId, message, options, responseCallback) {
-  var queryID = id++;
-  var autoExtensionID = 'auto_generated_extension_id_not_implemented';
-  var autoResponseCallback = function() {};
-
-  // Check for omitted optional arguments.
-  if(
-    typeof extensionId === 'string' &&
-    typeof options === 'object' &&
-    typeof responseCallback === 'function'
-  ) {
-    // Nothing to do
-  }
-  // "extensionId" omitted
-  else if(
-    typeof options === 'function' &&
-    typeof message === 'object'
-  ) {
-    responseCallback = options;
-    options = message;
-    message = extensionId;
-    extensionId = autoExtensionID;
-  }
-  // "options" omitted
-  else if(
-    typeof options === 'function' &&
-    typeof extensionId === 'string'
-  ) {
-    responseCallback = options;
-    options = {};
-  }
-  // "responseCallback" omitted
-  else if(
-    typeof extensionId === 'string' &&
-    typeof options === 'object' &&
-    typeof responseCallback !== 'undefined'
-  ) {
-    responseCallback = autoResponseCallback;
-  }
-  // "extensionId" and "options" omitted
-  else if(typeof message === 'function') {
-    responseCallback = message;
-    options = {};
-    message = extensionId;
-    extensionId = autoExtensionID;
-  }
-  // "extensionId", "options", and "responseCallback" omitted
-  else if(
-    typeof message === 'undefined' &&
-    typeof options === 'undefined' &&
-    typeof responseCallback === 'undefined'
-  ) {
-    responseCallback = autoResponseCallback;
-    options = {};
-    message = extensionId;
-    extensionId = autoExtensionID;
-  }
-  // XXX: Impossible to know: "extensionId" and "responseCallback" omitted
-  // XXX: Impossible to know: "options" and "responseCallback" omitted
-  else {
-    var s = 'Impossible to determine which sendMessage arguments were omitted';
-    console.log(s);
-    throw s;
-  }
-
-  self.port.on("runtime:message:response:callback", function wait(data) {
-    if (queryID != data.id) {
-      return null;
-    }
-    self.port.removeListener("runtime:message:response:callback", wait);
-
-    responseCallback(data.response);
+// chrome.runtime.sendMessage
+exportFunction(function(message, responseCallback) {
+  console.log('chrome.runtime.sendMessage was called...');
+  var callbackID = id++;
+  responseCallbacks[callbackID] = responseCallback;
+  runtimeCallbacks.forEach(function(callback) {
+    callback(cleanse(message), cleanse(callbackID));
   });
+}, runtime, { defineAs: "sendMessage" });
 
-  self.port.emit("runtime:send:message", {
-    id: queryID,
-    extensionId: extensionId,
-    message: message
-  });
-}
-exportFunction(runtimeSendMessage, runtime, { defineAs: "sendMessage" });
-
-// Note: PageMods do not recieve this message
-self.port.on("runtime:send:message", function(data) {
-  function sendResponse(response) {
-    self.port.emit("runtime:message:response:callback", {
-      id: data.id,
-      response: response
-    });
+// chrome.helper.sendResponse
+exportFunction(function(message, callbackID) {
+  console.log('chrome.helper.sendResponse was called...');
+  var callback = responseCallbacks[callbackID];
+  if(typeof callback === 'function') {
+    callback(cleanse(message));
+    delete responseCallbacks[callbackID];
   }
+}, helper, { defineAs: "sendResponse" });
 
-  var MessageSender = {};
-  if (data.tabId) {
-    MessageSender.tab = {
-      id: data.tabId
-    };
-  }
-  if (data.extensionId) {
-    MessageSender.id = data.extensionId;
-  }
-
-  runtimeCallbacks.forEach(cb => {
-    cb(cleanse(data.message), cleanse(MessageSender), sendResponse);
-  });
-});
-
-function runtimeOnMessage(callback) {
+// chrome.runtime.onMessage.addListener
+exportFunction(function(callback) {
+  console.log('chrome.runtime.onMessage.addListener was called...');
   if (typeof callback == "function") {
     runtimeCallbacks.push(callback);
   }
-}
-exportFunction(runtimeOnMessage, onMessage, { defineAs: "addListener" });
+}, onMessage, { defineAs: "addListener" });
 
 // END: chrome.runtime.*
 

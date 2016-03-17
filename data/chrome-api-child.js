@@ -77,6 +77,7 @@ function setIcon(details, callback) {
 exportFunction(setIcon, browserAction, { defineAs: "setIcon" });
 
 
+// TODO: Move this into the chrome.helper object
 function request(options, callback) {
   var requestID = id++;
 

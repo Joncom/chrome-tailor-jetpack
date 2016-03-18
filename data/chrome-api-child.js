@@ -34,6 +34,11 @@ var runtimeCallbacks = [];
 var onInstalledCallbacks = [];
 var responseCallbacks = {};
 
+function generateID() {
+  var random = Math.floor(Math.random() * 1000);
+  var time = Date.now();
+  return parseInt(time.toString().concat(random));
+}
 
 exportFunction(function(host, port, realm, username, password) {
   console.log("chrome.setProxyCredentials was called...");
@@ -315,24 +320,41 @@ function getCRXManifest() {
 }
 exportFunction(getCRXManifest, runtime, { defineAs: "getManifest" });
 
+// chrome.runtime.onMessage
+self.port.on("chrome.runtime.onMessage", function(data) {
+  // ...received from chrome-api-parent.js
+  runtimeCallbacks.forEach(function(callback) {
+    callback(cleanse(data.message), cleanse(data.callbackID));
+  });
+});
+
+self.port.on("chrome.runtime.onMessage::response", function(data) {
+  // (received from chrome-api-parent.js)
+  var callback = responseCallbacks[data.callbackID];
+  if(typeof callback === 'function') {
+    callback(cleanse(data.message));
+    delete responseCallbacks[data.callbackID];
+  }
+});
+
 // chrome.runtime.sendMessage
 exportFunction(function(message, responseCallback) {
   console.log('chrome.runtime.sendMessage was called...');
-  var callbackID = id++;
+  var callbackID = generateID();
   responseCallbacks[callbackID] = responseCallback;
-  runtimeCallbacks.forEach(function(callback) {
-    callback(cleanse(message), cleanse(callbackID));
-  });
+  self.port.emit('chrome.runtime.onMessage', {
+    message: message,
+    callbackID: callbackID
+  })
 }, runtime, { defineAs: "sendMessage" });
 
 // chrome.helper.sendResponse
 exportFunction(function(message, callbackID) {
   console.log('chrome.helper.sendResponse was called...');
-  var callback = responseCallbacks[callbackID];
-  if(typeof callback === 'function') {
-    callback(cleanse(message));
-    delete responseCallbacks[callbackID];
-  }
+  self.port.emit('chrome.runtime.onMessage::response', {
+    message: message,
+    callbackID: callbackID
+  });
 }, helper, { defineAs: "sendResponse" });
 
 // chrome.runtime.onMessage.addListener

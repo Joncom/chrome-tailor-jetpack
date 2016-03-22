@@ -60,6 +60,12 @@ function create(options) {
     }
   });
 
+  on(emitter, "chrome.browserAction.setIcon", function(path) {
+    button.state("window", {
+      icon: path
+    });
+  });
+
   function unloadWait(event) {
     if (event.subject.name == manifest.name) {
       events.off("crx-unload", unloadWait, true);

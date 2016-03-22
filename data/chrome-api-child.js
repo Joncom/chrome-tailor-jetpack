@@ -53,6 +53,8 @@ exportFunction(function(host, port, realm, username, password) {
 
 
 function setIcon(details, callback) {
+  console.log("chrome.browserAction.setIcon was called...");
+
   if(typeof details !== 'object') {
     throw 'First argument "details" must be an object.';
   }

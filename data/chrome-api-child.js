@@ -41,15 +41,15 @@ function generateID() {
 }
 
 exportFunction(function(host, port, realm, username, password) {
-  console.log("chrome.setProxyCredentials was called...");
-  self.port.emit("chrome.setProxyCredentials", {
+  console.log("chrome.helper.setProxyCredentials was called...");
+  self.port.emit("chrome.helper.setProxyCredentials", {
     host: host,
     port: port,
     realm: realm,
     username: username,
     password: password
   });
-}, chrome, { defineAs: "setProxyCredentials" });
+}, helper, { defineAs: "setProxyCredentials" });
 
 
 function setIcon(details, callback) {

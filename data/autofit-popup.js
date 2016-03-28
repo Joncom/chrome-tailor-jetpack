@@ -22,4 +22,4 @@ interval = setInterval(function() {
       lastWidth = width;
       lastHeight = height;
     }
-}, 20);
+}, 10);

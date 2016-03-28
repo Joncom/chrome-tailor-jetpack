@@ -51,9 +51,11 @@ function create(options) {
 
         setup({ target: panel, button: button });
 
-        panel.show({
-          position: button
-        });
+        setTimeout(function() {
+          panel.show({
+            position: button
+          });
+        }, 350);
       }
 
       emit(emitter, "browser-action:onclicked");

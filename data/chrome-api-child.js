@@ -360,7 +360,7 @@ exportFunction(function(message, responseCallback) {
 exportFunction(function(message, callbackID) {
   console.log('chrome.helper.sendResponse was called...');
   self.port.emit('chrome.runtime.onMessage::response', {
-    message: message,
+    message: (message || null),
     callbackID: callbackID
   });
 }, helper, { defineAs: "sendResponse" });

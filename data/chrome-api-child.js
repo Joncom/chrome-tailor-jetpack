@@ -40,6 +40,12 @@ function generateID() {
   return parseInt(time.toString().concat(random));
 }
 
+// chrome.helper.enableProxyAutoLogin
+exportFunction(function(message, callbackID) {
+  console.log('chrome.helper.enableProxyAutoLogin was called...');
+  self.port.emit('chrome.helper.enableProxyAutoLogin');
+}, helper, { defineAs: "enableProxyAutoLogin" });
+
 exportFunction(function(host, port, realm, username, password) {
   console.log("chrome.helper.setProxyCredentials was called...");
   self.port.emit("chrome.helper.setProxyCredentials", {

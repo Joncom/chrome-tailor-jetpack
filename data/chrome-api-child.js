@@ -397,15 +397,18 @@ exportFunction(function(callback) {
   console.log('chrome.proxy.settings.onChange.removeListener was called...');
 }, onAuthRequired, { defineAs: "removeListener" });
 
+// chrome.proxy.onProxyError.addListener
 exportFunction(function(callback, filter, opt_extraInfoSpec) {
   console.log('chrome.proxy.onProxyError.addListener was called...');
 }, onProxyError, { defineAs: "addListener" });
 
+// chrome.proxy.onProxyError.hasListener
 exportFunction(function(callback) {
   console.log('chrome.proxy.onProxyError.hasListener was called...');
   return false;
 }, onProxyError, { defineAs: "hasListener" });
 
+// chrome.proxy.onProxyError.removeListener
 exportFunction(function(callback) {
   console.log('chrome.proxy.onProxyError.removeListener was called...');
 }, onProxyError, { defineAs: "removeListener" });

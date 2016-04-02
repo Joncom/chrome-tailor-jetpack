@@ -395,6 +395,12 @@ exportFunction(function(callback, filter, opt_extraInfoSpec) {
 // chrome.proxy.settings.onChange.hasListener
 exportFunction(function(callback) {
   console.log('chrome.proxy.settings.onChange.hasListener was called...');
+  var callbacks = proxySettingsOnChangeCallbacks;
+  for(var i=0; i<callbacks.length; i++) {
+    if(callbacks[i] === callback) {
+      return true;
+    }
+  }
   return false;
 }, proxySettingsOnChange, { defineAs: "hasListener" });
 

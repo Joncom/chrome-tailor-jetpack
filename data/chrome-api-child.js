@@ -14,6 +14,7 @@ var topSites = createObjectIn(chrome, { defineAs: "topSites" });
 
 var proxy = createObjectIn(chrome, { defineAs: "proxy" });
 var proxySettings = createObjectIn(proxy, { defineAs: "settings" });
+var proxySettingsOnChange = createObjectIn(proxySettings, { defineAs: "onChange" });
 var onProxyError = createObjectIn(proxy, { defineAs: "onProxyError" });
 
 var storage = createObjectIn(chrome, { defineAs: "storage" });
@@ -384,18 +385,18 @@ exportFunction(function(callback) {
 // chrome.proxy.settings.onChange.addListener
 exportFunction(function(callback, filter, opt_extraInfoSpec) {
   console.log('chrome.proxy.settings.onChange.addListener was called...');
-}, onAuthRequired, { defineAs: "addListener" });
+}, proxySettingsOnChange, { defineAs: "addListener" });
 
 // chrome.proxy.settings.onChange.hasListener
 exportFunction(function(callback) {
   console.log('chrome.proxy.settings.onChange.hasListener was called...');
   return false;
-}, onAuthRequired, { defineAs: "hasListener" });
+}, proxySettingsOnChange, { defineAs: "hasListener" });
 
 // chrome.proxy.settings.onChange.removeListener
 exportFunction(function(callback) {
   console.log('chrome.proxy.settings.onChange.removeListener was called...');
-}, onAuthRequired, { defineAs: "removeListener" });
+}, proxySettingsOnChange, { defineAs: "removeListener" });
 
 // chrome.proxy.onProxyError.addListener
 exportFunction(function(callback, filter, opt_extraInfoSpec) {

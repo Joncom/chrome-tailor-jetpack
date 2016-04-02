@@ -33,6 +33,7 @@ var onAuthRequired = createObjectIn(webRequest, { defineAs: "onAuthRequired" });
 var id = 0;
 var runtimeCallbacks = [];
 var onInstalledCallbacks = [];
+var proxySettingsOnChangeCallbacks = [];
 var responseCallbacks = {};
 
 function generateID() {
@@ -385,6 +386,10 @@ exportFunction(function(callback) {
 // chrome.proxy.settings.onChange.addListener
 exportFunction(function(callback, filter, opt_extraInfoSpec) {
   console.log('chrome.proxy.settings.onChange.addListener was called...');
+  if(typeof callback !== 'function') {
+    throw 'The "callback" argument must be a function.';
+  }
+  proxySettingsOnChangeCallbacks.push(callback);
 }, proxySettingsOnChange, { defineAs: "addListener" });
 
 // chrome.proxy.settings.onChange.hasListener

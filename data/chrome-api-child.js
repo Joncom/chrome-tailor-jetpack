@@ -407,6 +407,7 @@ exportFunction(function(callback) {
 // chrome.proxy.settings.onChange.removeListener
 exportFunction(function(callback) {
   console.log('chrome.proxy.settings.onChange.removeListener was called...');
+  // TODO: implement
 }, proxySettingsOnChange, { defineAs: "removeListener" });
 
 // chrome.proxy.settings.onChange

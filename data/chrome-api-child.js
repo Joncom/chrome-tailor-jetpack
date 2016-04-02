@@ -381,6 +381,22 @@ exportFunction(function(callback) {
 
 // START: chrome.proxy.*
 
+// chrome.proxy.settings.onChange.addListener
+exportFunction(function(callback, filter, opt_extraInfoSpec) {
+  console.log('chrome.proxy.settings.onChange.addListener was called...');
+}, onAuthRequired, { defineAs: "addListener" });
+
+// chrome.proxy.settings.onChange.hasListener
+exportFunction(function(callback) {
+  console.log('chrome.proxy.settings.onChange.hasListener was called...');
+  return false;
+}, onAuthRequired, { defineAs: "hasListener" });
+
+// chrome.proxy.settings.onChange.removeListener
+exportFunction(function(callback) {
+  console.log('chrome.proxy.settings.onChange.removeListener was called...');
+}, onAuthRequired, { defineAs: "removeListener" });
+
 exportFunction(function(callback, filter, opt_extraInfoSpec) {
   console.log('chrome.proxy.onProxyError.addListener was called...');
 }, onProxyError, { defineAs: "addListener" });

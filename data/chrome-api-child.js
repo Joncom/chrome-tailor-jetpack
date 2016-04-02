@@ -403,6 +403,14 @@ exportFunction(function(callback) {
   console.log('chrome.proxy.settings.onChange.removeListener was called...');
 }, proxySettingsOnChange, { defineAs: "removeListener" });
 
+// chrome.proxy.settings.onChange
+self.port.on("chrome.proxy.settings.onChange", function() {
+  console.log("chrome.proxy.settings.onChange event fired...");
+  proxySettingsOnChangeCallbacks.forEach(function(callback) {
+    callback();
+  });
+});
+
 // chrome.proxy.onProxyError.addListener
 exportFunction(function(callback, filter, opt_extraInfoSpec) {
   console.log('chrome.proxy.onProxyError.addListener was called...');
